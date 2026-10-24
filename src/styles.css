@@ -1,0 +1,15 @@
+/* Estilos globales. Bootstrap se carga desde angular.json. */
+
+body {
+  background-color: #f6f8f7;
+}
+
+/* Clases que pone la directiva appResaltarFecha */
+.fecha-hoy {
+  background-color: var(--bs-warning-bg-subtle) !important;
+  border-left: 4px solid var(--bs-warning) !important;
+}
+
+.fecha-pasada {
+  opacity: 0.6;
+}

@@ -1,0 +1,33 @@
+<div class="card h-100 shadow-sm">
+  <div class="card-body">
+    <div class="d-flex align-items-center gap-3 mb-2">
+      <span class="fs-1" aria-hidden="true">{{ icono }}</span>
+      <div>
+        <h3 class="h5 mb-0">{{ mascota.nombre }}</h3>
+        <small class="text-body-secondary">{{ mascota.especie }} · {{ mascota.raza }}</small>
+      </div>
+    </div>
+    <ul class="list-unstyled small mb-0">
+      <li><strong>Sexo:</strong> {{ mascota.sexo }}</li>
+      <li><strong>Edad:</strong> {{ mascota.fechaNacimiento | edad }}</li>
+      <li><strong>Peso:</strong> {{ mascota.pesoKg }} kg</li>
+      @if (nombreDueno) {
+        <li><strong>Dueño:</strong> {{ nombreDueno }}</li>
+      }
+    </ul>
+  </div>
+  @if (mostrarAcciones) {
+    <div class="card-footer bg-transparent d-flex gap-2">
+      <button
+        type="button"
+        class="btn btn-outline-success btn-sm flex-fill"
+        (click)="verHistorial.emit(mascota)"
+      >
+        Ver historial
+      </button>
+      <button type="button" class="btn btn-outline-danger btn-sm" (click)="eliminar.emit(mascota)">
+        Eliminar
+      </button>
+    </div>
+  }
+</div>

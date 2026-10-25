@@ -1,0 +1,27 @@
+<app-encabezado-pagina
+  titulo="Dueños"
+  subtitulo="Registro de los clientes de la clínica"
+  icono="👤"
+/>
+
+@if (mensaje) {
+  <div class="alert alert-success alert-dismissible" role="alert">
+    {{ mensaje }}
+    <button type="button" class="btn-close" aria-label="Cerrar" (click)="mensaje = ''"></button>
+  </div>
+}
+@if (error) {
+  <div class="alert alert-danger alert-dismissible" role="alert">
+    {{ error }}
+    <button type="button" class="btn-close" aria-label="Cerrar" (click)="error = ''"></button>
+  </div>
+}
+
+<div class="row g-4">
+  <div class="col-lg-4">
+    <app-dueno-form (guardado)="registrar($event)" />
+  </div>
+  <div class="col-lg-8">
+    <app-dueno-lista [duenos]="duenos" (eliminar)="eliminar($event)" />
+  </div>
+</div>

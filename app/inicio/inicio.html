@@ -1,0 +1,54 @@
+<app-encabezado-pagina titulo="Inicio" [subtitulo]="'Hoy es ' + (hoy | fechaTexto)" icono="🏥" />
+
+<div class="row row-cols-2 row-cols-md-4 g-3 mb-4">
+  @for (item of resumen; track item.titulo) {
+    <div class="col">
+      <a class="card text-center text-decoration-none h-100 shadow-sm" [routerLink]="item.ruta">
+        <div class="card-body">
+          <div class="display-6 fw-bold text-success">{{ item.valor }}</div>
+          <div class="text-body-secondary">{{ item.titulo }}</div>
+        </div>
+      </a>
+    </div>
+  }
+</div>
+
+<div class="row g-4">
+  <div class="col-lg-7">
+    <div class="card shadow-sm">
+      <div class="card-header fw-semibold">Próximas citas</div>
+      <ul class="list-group list-group-flush">
+        @for (cita of proximasCitas; track cita.id) {
+          <li
+            class="list-group-item d-flex justify-content-between align-items-center"
+            [appResaltarFecha]="cita.fecha"
+          >
+            <div>
+              <div class="fw-semibold">{{ cita.hora }} · {{ nombreMascota(cita.mascotaId) }}</div>
+              <small class="text-body-secondary"
+                >{{ cita.fecha | fechaTexto }} — {{ cita.motivo }}</small
+              >
+            </div>
+            <span [class]="cita.estado | estadoCita: 'clase'">{{ cita.estado | estadoCita }}</span>
+          </li>
+        } @empty {
+          <li class="list-group-item text-body-secondary">No hay citas pendientes.</li>
+        }
+      </ul>
+    </div>
+  </div>
+
+  <div class="col-lg-5">
+    <div class="card shadow-sm">
+      <div class="card-header fw-semibold">Personas registradas</div>
+      <ul class="list-group list-group-flush">
+        @for (persona of personas; track $index) {
+          <li class="list-group-item">
+            <div class="fw-semibold">{{ persona.nombreCompleto }}</div>
+            <small class="text-body-secondary">{{ persona.describir() }}</small>
+          </li>
+        }
+      </ul>
+    </div>
+  </div>
+</div>

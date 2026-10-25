@@ -1,11 +1,28 @@
-<app-encabezado-pagina titulo="Mascotas" subtitulo="Registro de mascotas y sus dueños" icono="🐶" />
+<app-encabezado-pagina titulo="Mascotas" subtitulo="Gestión y registro de mascotas" icono="🐾" />
 
 <div class="row g-4">
+  <!-- Formulario para registrar nueva mascota -->
   <div class="col-lg-4">
-    <app-mascota-form />
+    <app-mascota-form [duenos]="duenos" (guardado)="registrar($event)" />
   </div>
+
+  <!-- Listado de tarjetas de mascotas -->
   <div class="col-lg-8">
-    <!-- TAREA DE ROSMERY: lista de <app-tarjeta-mascota> (ver pasos en mascotas-pagina.ts) -->
-    <div class="alert alert-info">Lista de mascotas en construcción.</div>
+    <div class="row row-cols-1 row-cols-md-2 g-3">
+      @for (m of mascotas; track m.id) {
+        <div class="col">
+          <app-tarjeta-mascota 
+            [mascota]="m" 
+            [nombreDueno]="nombreDueno(m.duenoId)" 
+            [mostrarAcciones]="true"
+            (verHistorial)="verHistorial($event)" 
+            (eliminar)="eliminar($event)" />
+        </div>
+      } @empty {
+        <div class="col-12">
+          <div class="alert alert-info text-center">No hay mascotas registradas.</div>
+        </div>
+      }
+    </div>
   </div>
 </div>

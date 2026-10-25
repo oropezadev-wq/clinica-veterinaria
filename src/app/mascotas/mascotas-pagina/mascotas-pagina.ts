@@ -1,26 +1,55 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { EncabezadoPagina } from '../../shared/components/encabezado-pagina/encabezado-pagina';
 import { MascotaForm } from '../mascota-form/mascota-form';
+import { TarjetaMascota } from '../tarjeta-mascota/tarjeta-mascota';
+import { MascotaService } from '../mascota.service';
+import { DuenoService } from '../../duenos/dueno.service';
+import { Mascota, DatosMascota } from '../mascota.model';
+import { Dueno } from '../../duenos/dueno.model';
 
-/**
- * TAREA DE ROSMERY: página de mascotas.
- * Modelo a copiar: src/app/duenos/duenos-pagina/
- *
- * Pasos:
- * 1. Inyectar MascotaService y DuenoService en el constructor.
- * 2. get mascotas(): Mascota[]  -> this.mascotaService.listar()
- *    get duenos(): Dueno[]      -> this.duenoService.listar()
- * 3. registrar(datos: DatosMascota): llama a mascotaService.registrar y muestra un mensaje.
- * 4. nombreDueno(id: number): string -> busca con duenoService.buscarPorId(id)?.nombreCompleto
- * 5. eliminar(mascota: Mascota): llama a mascotaService.eliminar(mascota.id).
- * 6. verHistorial(mascota: Mascota): navegar con Router a /historial/{id}
- *    (this.router.navigate(['/historial', mascota.id])).
- * 7. En el HTML: el formulario a la izquierda y, a la derecha, un @for con
- *    <app-tarjeta-mascota> (ya está hecho en ../tarjeta-mascota, solo se usa).
- */
 @Component({
   selector: 'app-mascotas-pagina',
-  imports: [EncabezadoPagina, MascotaForm],
+  standalone: true,
+  imports: [CommonModule, EncabezadoPagina, MascotaForm, TarjetaMascota],
   templateUrl: './mascotas-pagina.html',
 })
-export class MascotasPagina {}
+export class MascotasPagina {
+  private mascotaService: MascotaService = inject(MascotaService);
+  private duenoService: DuenoService = inject(DuenoService);
+  private router: Router = inject(Router);
+
+  // 1 y 2. Getters para listar mascotas y dueños
+  get mascotas(): Mascota[] {
+    return this.mascotaService.listar();
+  }
+
+  get duenos(): Dueno[] {
+    return this.duenoService.listar();
+  }
+
+  // 3. Registrar una nueva mascota
+  registrar(datos: DatosMascota): void {
+    this.mascotaService.registrar(datos);
+    alert('¡Mascota registrada con éxito!');
+  }
+
+  // 4. Obtener el nombre del dueño por su ID
+  nombreDueno(id: number): string {
+    const dueno = this.duenoService.buscarPorId(id);
+    return dueno ? (dueno.nombreCompleto || dueno.nombres || 'Desconocido') : 'Desconocido';
+  }
+
+  // 5. Eliminar una mascota
+  eliminar(mascota: Mascota): void {
+    if (confirm(`¿Estás seguro de eliminar a ${mascota.nombre}?`)) {
+      this.mascotaService.eliminar(mascota.id);
+    }
+  }
+
+  // 6. Navegar al historial médico de la mascota
+  verHistorial(mascota: Mascota): void {
+    this.router.navigate(['/historial', mascota.id]);
+  }
+}

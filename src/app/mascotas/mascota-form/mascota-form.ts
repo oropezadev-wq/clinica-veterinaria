@@ -1,28 +1,50 @@
-import { Component } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { ESPECIES, DatosMascota } from '../mascota.model'; 
 
-/**
- * TAREA DE ROSMERY: formulario reactivo para registrar una mascota.
- * Modelo a copiar: src/app/duenos/dueno-form/ (mismo esquema).
- *
- * Pasos:
- * 1. Agregar @Output() guardado = new EventEmitter<DatosMascota>();
- * 2. Agregar @Input({ required: true }) duenos: Dueno[] = [];  (para el <select> de dueño)
- * 3. En el constructor, crear el formulario con this.fb.nonNullable.group({...}) y estos campos:
- *      nombre          -> Validators.required, Validators.minLength(2)
- *      especie         -> Validators.required  (opciones: ESPECIES de mascota.model.ts)
- *      raza            -> Validators.required
- *      sexo            -> Validators.required  ('Macho' | 'Hembra')
- *      fechaNacimiento -> Validators.required  (<input type="date">)
- *      pesoKg          -> Validators.required, Validators.min(0.1)
- *      duenoId         -> Validators.required  (<select> con los dueños, valor = dueno.id)
- *    Ojo: pesoKg y duenoId son números (valor inicial 0).
- * 4. Copiar campoInvalido() y enviar() de dueno-form.ts.
- * 5. En el HTML: un <select> para especie y otro para dueño, usando @for.
- */
+
 @Component({
   selector: 'app-mascota-form',
-  imports: [ReactiveFormsModule],
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './mascota-form.html',
 })
-export class MascotaForm {}
+export class MascotaForm {
+  @Output() guardado = new EventEmitter<DatosMascota>();
+
+  @Input({ required: true }) duenos: any[] = [];
+
+  
+  especiesList = ESPECIES;
+
+  formulario;
+
+  constructor(private fb: FormBuilder) {
+    this.formulario = this.fb.nonNullable.group({
+      nombre: ['', [Validators.required, Validators.minLength(2)]],
+      especie: ['', Validators.required],
+      raza: ['', Validators.required],
+      sexo: ['', Validators.required],
+      fechaNacimiento: ['', Validators.required],
+      pesoKg: [0, [Validators.required, Validators.min(0.1)]],
+      duenoId: [0, [Validators.required, Validators.min(1)]],
+    });
+  }
+
+  // 2. Función de ayuda para pintar en rojo los campos con error
+  campoInvalido(campo: keyof DatosMascota): boolean {
+    const control = this.formulario.controls[campo];
+    return !!(control && control.invalid && (control.dirty || control.touched));
+  }
+
+  // 3. Al enviar: valida, emite el evento con getRawValue() y limpia el formulario
+  enviar(): void {
+    if (this.formulario.invalid) {
+      this.formulario.markAllAsTouched();
+      return;
+    }
+    this.guardado.emit(this.formulario.getRawValue() as DatosMascota);
+    this.formulario.reset();
+  }
+}

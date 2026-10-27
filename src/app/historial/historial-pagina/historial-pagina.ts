@@ -4,11 +4,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { EncabezadoPagina } from '../../shared/components/encabezado-pagina/encabezado-pagina';
 import { AtencionForm } from '../atencion-form/atencion-form';
 import { AtencionService } from '../atencion.service';
-import { VeterinarioService } from '../veterinario.service'; // <--- Corregido (en singular y misma carpeta)
+import { VeterinarioService } from '../veterinario.service';
 import { MascotaService } from '../../mascotas/mascota.service';
 import { Mascota } from '../../mascotas/mascota.model';
 import { Atencion, DatosAtencion } from '../atencion.model';
-import { Veterinario } from '../veterinario.model'; // <--- Corregido (en singular)
+import { Veterinario } from '../veterinario.model';
 import { FechaTextoPipe } from '../../shared/pipes/fecha-texto.pipe';
 
 @Component({

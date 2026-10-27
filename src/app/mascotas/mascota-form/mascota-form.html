@@ -71,9 +71,9 @@
       <div class="mb-3">
         <label class="form-label">Dueño responsable</label>
         <select class="form-select" formControlName="duenoId">
-          <option [value]="0">Seleccione un dueño...</option>
+          <option [ngValue]="0">Seleccione un dueño...</option>
           @for (dueno of duenos; track dueno.id) {
-            <option [value]="dueno.id">{{ dueno.nombres }} {{ dueno.apellidos }}</option>
+            <option [ngValue]="dueno.id">{{ dueno.nombres }} {{ dueno.apellidos }}</option>
           }
         </select>
         @if (campoInvalido('duenoId')) {

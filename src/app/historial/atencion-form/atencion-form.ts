@@ -1,8 +1,9 @@
 import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { DatosAtencion } from '../atencion.model'; // Ajusta la ruta si es necesario
-import { Veterinario } from '../veterinario.model'; // Ajusta la ruta si es necesario
+import { DatosAtencion } from '../atencion.model';
+import { Veterinario } from '../veterinario.model';
+import { hoyTexto } from '../../shared/utils/fechas';
 
 @Component({
   selector: 'app-atencion-form',
@@ -19,9 +20,9 @@ import { Veterinario } from '../veterinario.model'; // Ajusta la ruta si es nece
           <div class="mb-3">
             <label class="form-label">Médico Veterinario</label>
             <select class="form-select" formControlName="veterinarioId">
-              <option [value]="0">Seleccione un veterinario...</option>
+              <option [ngValue]="0">Seleccione un veterinario...</option>
               @for (vet of veterinarios; track vet.id) {
-                <option [value]="vet.id">{{ vet.nombres }} {{ vet.apellidos }} ({{ vet.especialidad }})</option>
+                <option [ngValue]="vet.id">{{ vet.nombres }} {{ vet.apellidos }} ({{ vet.especialidad }})</option>
               }
             </select>
             @if (campoInvalido('veterinarioId')) {
@@ -79,33 +80,23 @@ import { Veterinario } from '../veterinario.model'; // Ajusta la ruta si es nece
 export class AtencionForm {
   private fb = inject(FormBuilder);
 
-  // Paso 1: @Input y @Output requeridos
   @Input({ required: true }) mascotaId = 0;
   @Input({ required: true }) veterinarios: Veterinario[] = [];
   @Output() guardado = new EventEmitter<DatosAtencion>();
 
-  // Función de ayuda para la fecha de hoy en formato texto (YYYY-MM-DD)
-  private hoyTexto(): string {
-    const hoy = new Date();
-    return hoy.toISOString().split('T')[0];
-  }
-
-  // Paso 2: Definición del formulario con nonNullable y validadores
   formulario = this.fb.nonNullable.group({
     veterinarioId: [0, [Validators.required, Validators.min(1)]],
-    fecha: [this.hoyTexto(), Validators.required],
+    fecha: [hoyTexto(), Validators.required],
     motivo: ['', Validators.required],
     diagnostico: ['', Validators.required],
     tratamiento: ['', [Validators.required, Validators.minLength(5)]],
   });
 
-  // Paso 4: Función de ayuda para validaciones (copiada del esquema de dueno-form)
   campoInvalido(campo: keyof DatosAtencion): boolean {
     const control = this.formulario.controls[campo as keyof typeof this.formulario.controls];
     return !!(control && control.invalid && (control.dirty || control.touched));
   }
 
-  // Paso 3: Al enviar se emite el objeto combinado incluyendo el mascotaId
   enviar(): void {
     if (this.formulario.invalid) {
       this.formulario.markAllAsTouched();
@@ -120,7 +111,7 @@ export class AtencionForm {
     this.guardado.emit(atencionData);
     this.formulario.reset({
       veterinarioId: 0,
-      fecha: this.hoyTexto(),
+      fecha: hoyTexto(),
       motivo: '',
       diagnostico: '',
       tratamiento: '',

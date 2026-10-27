@@ -8,9 +8,9 @@
       <div class="mb-3">
         <label class="form-label">Mascota Paciente</label>
         <select class="form-select" formControlName="mascotaId">
-          <option [value]="0">Seleccione una mascota...</option>
+          <option [ngValue]="0">Seleccione una mascota...</option>
           @for (mascota of mascotas; track mascota.id) {
-            <option [value]="mascota.id">{{ mascota.nombre }} ({{ mascota.especie }})</option>
+            <option [ngValue]="mascota.id">{{ mascota.nombre }} ({{ mascota.especie }})</option>
           }
         </select>
         @if (campoInvalido('mascotaId')) {

@@ -4,28 +4,7 @@ import { Cita, EstadoCita } from '../cita.model';
 import { FechaTextoPipe } from '../../shared/pipes/fecha-texto.pipe';
 import { EstadoCitaPipe } from '../estado-cita.pipe';
 import { ResaltarFechaDirective } from '../../shared/directives/resaltar-fecha.directive';
-
-// Funciones auxiliares de fechas
-function hoyTexto(): string {
-  const hoy = new Date();
-  return hoy.toISOString().split('T')[0];
-}
-
-function sumarDias(fechaStr: string, dias: number): string {
-  const fecha = new Date(fechaStr);
-  fecha.setDate(fecha.getDate() + dias);
-  return fecha.toISOString().split('T')[0];
-}
-
-function diasDeLaSemana(inicioStr: string): string[] {
-  const dias: string[] = [];
-  let actual = inicioStr;
-  for (let i = 0; i < 7; i++) {
-    dias.push(actual);
-    actual = sumarDias(actual, 1);
-  }
-  return dias;
-}
+import { hoyTexto, sumarDias, diasDeLaSemana } from '../../shared/utils/fechas';
 
 @Component({
   selector: 'app-agenda',
@@ -108,8 +87,7 @@ export class Agenda {
       .sort((a, b) => a.hora.localeCompare(b.hora));
   }
 
-  // Método auxiliar para comparar estados de manera segura en el template
   esPendiente(estado: string): boolean {
-    return estado === 'Pendiente';
+    return estado === 'pendiente';
   }
 }

@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { ESPECIES, DatosMascota } from '../mascota.model'; 
-
+import { ESPECIES, DatosMascota } from '../mascota.model';
+import { Dueno } from '../../duenos/dueno.model';
 
 @Component({
   selector: 'app-mascota-form',
@@ -12,10 +12,8 @@ import { ESPECIES, DatosMascota } from '../mascota.model';
 })
 export class MascotaForm {
   @Output() guardado = new EventEmitter<DatosMascota>();
+  @Input({ required: true }) duenos: Dueno[] = [];
 
-  @Input({ required: true }) duenos: any[] = [];
-
-  
   especiesList = ESPECIES;
 
   formulario;
@@ -32,13 +30,11 @@ export class MascotaForm {
     });
   }
 
-  // 2. Función de ayuda para pintar en rojo los campos con error
   campoInvalido(campo: keyof DatosMascota): boolean {
     const control = this.formulario.controls[campo];
     return !!(control && control.invalid && (control.dirty || control.touched));
   }
 
-  // 3. Al enviar: valida, emite el evento con getRawValue() y limpia el formulario
   enviar(): void {
     if (this.formulario.invalid) {
       this.formulario.markAllAsTouched();

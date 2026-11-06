@@ -36,6 +36,7 @@ import { hoyTexto, sumarDias, diasDeLaSemana } from '../../shared/utils/fechas';
                       <div class="fw-bold text-primary small">{{ cita.hora }}</div>
                       <div class="small fw-semibold text-dark">🐾 {{ nombreMascota(cita.mascotaId) }}</div>
                       <div class="text-muted small text-truncate" title="{{ cita.motivo }}">{{ cita.motivo }}</div>
+                      <div class="small">S/ {{ cita.costo | number: '1.2-2' }}</div>
                       
                       <div class="mt-1">
                         <span [class]="cita.estado | estadoCita:'clase'">
@@ -45,9 +46,11 @@ import { hoyTexto, sumarDias, diasDeLaSemana } from '../../shared/utils/fechas';
 
                       @if (esPendiente(cita.estado)) {
                         <div class="mt-2 d-flex gap-1">
-                          <button class="btn btn-xs btn-success py-0 px-1 font-size-sm" style="font-size: 0.75rem;" (click)="cambiarEstado.emit({ id: cita.id, estado: 'atendida' })">
-                            Atendida
-                          </button>
+                          @if (cita.fecha <= hoy) {
+                            <button class="btn btn-xs btn-success py-0 px-1 font-size-sm" style="font-size: 0.75rem;" (click)="atender.emit(cita)">
+                              Atender
+                            </button>
+                          }
                           <button class="btn btn-xs btn-outline-danger py-0 px-1 font-size-sm" style="font-size: 0.75rem;" (click)="cambiarEstado.emit({ id: cita.id, estado: 'cancelada' })">
                             Cancelar
                           </button>
@@ -70,8 +73,10 @@ export class Agenda {
   @Input({ required: true }) citas: Cita[] = [];
   @Input() nombreMascota: (id: number) => string = () => '';
   @Output() cambiarEstado = new EventEmitter<{ id: number; estado: EstadoCita }>();
+  @Output() atender = new EventEmitter<Cita>();
 
-  inicio = hoyTexto();
+  hoy = hoyTexto();
+  inicio = this.hoy;
 
   get dias(): string[] {
     return diasDeLaSemana(this.inicio);

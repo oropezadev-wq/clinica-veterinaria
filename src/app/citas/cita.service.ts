@@ -15,6 +15,7 @@ export class CitaService extends RepositorioMemoria<Cita> {
         fecha: sumarDias(hoy, -7),
         hora: '10:00',
         motivo: 'Vacuna antirrábica',
+        costo: 40,
         estado: 'atendida',
       },
       {
@@ -23,6 +24,7 @@ export class CitaService extends RepositorioMemoria<Cita> {
         fecha: hoy,
         hora: '09:00',
         motivo: 'Control de peso',
+        costo: 30,
         estado: 'pendiente',
       },
       {
@@ -31,6 +33,7 @@ export class CitaService extends RepositorioMemoria<Cita> {
         fecha: hoy,
         hora: '16:00',
         motivo: 'Desparasitación',
+        costo: 25,
         estado: 'pendiente',
       },
       {
@@ -39,6 +42,7 @@ export class CitaService extends RepositorioMemoria<Cita> {
         fecha: sumarDias(hoy, 1),
         hora: '11:00',
         motivo: 'Corte de uñas',
+        costo: 20,
         estado: 'pendiente',
       },
       {
@@ -47,6 +51,7 @@ export class CitaService extends RepositorioMemoria<Cita> {
         fecha: sumarDias(hoy, 3),
         hora: '15:00',
         motivo: 'Revisión de oídos',
+        costo: 35,
         estado: 'pendiente',
       },
       {
@@ -55,7 +60,26 @@ export class CitaService extends RepositorioMemoria<Cita> {
         fecha: sumarDias(hoy, -2),
         hora: '12:00',
         motivo: 'Baño medicado',
+        costo: 45,
         estado: 'cancelada',
+      },
+      {
+        id: 7,
+        mascotaId: 1,
+        fecha: sumarDias(hoy, -120),
+        hora: '10:00',
+        motivo: 'Vómitos',
+        costo: 60,
+        estado: 'atendida',
+      },
+      {
+        id: 8,
+        mascotaId: 3,
+        fecha: sumarDias(hoy, -60),
+        hora: '11:00',
+        motivo: 'Cojera pata trasera',
+        costo: 70,
+        estado: 'atendida',
       },
     ];
   }
@@ -86,6 +110,18 @@ export class CitaService extends RepositorioMemoria<Cita> {
     if (cita) {
       cita.estado = estado;
     }
+  }
+
+  /** Citas de una mascota que ya se pueden atender: pendientes de hoy o de días anteriores. */
+  paraAtender(mascotaId: number): Cita[] {
+    const hoy = hoyTexto();
+    return this.datos
+      .filter((c) => c.mascotaId === mascotaId && c.estado === 'pendiente' && c.fecha <= hoy)
+      .sort((a, b) => (a.fecha + a.hora).localeCompare(b.fecha + b.hora));
+  }
+
+  tienePendientes(mascotaId: number): boolean {
+    return this.datos.some((c) => c.mascotaId === mascotaId && c.estado === 'pendiente');
   }
 
   /** Citas pendientes desde hoy en adelante, en orden. */

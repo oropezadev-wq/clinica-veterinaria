@@ -36,6 +36,7 @@ describe('CitaService', () => {
       fecha: hoyTexto(),
       hora: '09:00',
       motivo: 'Prueba',
+      costo: 30,
     });
     expect(cita).toBeNull();
   });
@@ -43,7 +44,7 @@ describe('CitaService', () => {
   it('agenda en una hora libre y la quita de las disponibles', () => {
     const servicio = new CitaService();
     const fecha = sumarDias(hoyTexto(), 10);
-    const cita = servicio.registrar({ mascotaId: 1, fecha, hora: '10:00', motivo: 'Prueba' });
+    const cita = servicio.registrar({ mascotaId: 1, fecha, hora: '10:00', motivo: 'Prueba', costo: 30 });
     expect(cita?.estado).toBe('pendiente');
     expect(servicio.horasDisponibles(fecha)).not.toContain('10:00');
   });

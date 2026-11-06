@@ -21,6 +21,14 @@ export function hoyTexto(): string {
   return aTexto(new Date());
 }
 
+/** Hora actual como "HH:mm", igual que las horas de la agenda. */
+export function horaActual(): string {
+  const ahora = new Date();
+  const hora = String(ahora.getHours()).padStart(2, '0');
+  const minutos = String(ahora.getMinutes()).padStart(2, '0');
+  return `${hora}:${minutos}`;
+}
+
 /** sumarDias('2026-10-28', 1) => '2026-10-29' */
 export function sumarDias(texto: string, dias: number): string {
   const fecha = aFecha(texto);

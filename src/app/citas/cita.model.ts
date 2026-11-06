@@ -6,6 +6,7 @@ export interface Cita {
   fecha: string; // "AAAA-MM-DD"
   hora: string; // "HH:mm"
   motivo: string;
+  costo: number; // en soles
   estado: EstadoCita;
 }
 

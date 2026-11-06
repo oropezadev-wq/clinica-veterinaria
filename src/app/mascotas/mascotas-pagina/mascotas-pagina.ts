@@ -6,6 +6,7 @@ import { MascotaForm } from '../mascota-form/mascota-form';
 import { TarjetaMascota } from '../tarjeta-mascota/tarjeta-mascota';
 import { MascotaService } from '../mascota.service';
 import { DuenoService } from '../../duenos/dueno.service';
+import { CitaService } from '../../citas/cita.service';
 import { Mascota, DatosMascota } from '../mascota.model';
 import { Dueno } from '../../duenos/dueno.model';
 
@@ -18,6 +19,7 @@ import { Dueno } from '../../duenos/dueno.model';
 export class MascotasPagina {
   private mascotaService: MascotaService = inject(MascotaService);
   private duenoService: DuenoService = inject(DuenoService);
+  private citaService: CitaService = inject(CitaService);
   private router: Router = inject(Router);
 
   // 1 y 2. Getters para listar mascotas y dueños
@@ -43,6 +45,10 @@ export class MascotasPagina {
 
   // 5. Eliminar una mascota
   eliminar(mascota: Mascota): void {
+    if (this.citaService.tienePendientes(mascota.id)) {
+      alert(`${mascota.nombre} tiene citas pendientes; no se puede eliminar.`);
+      return;
+    }
     if (confirm(`¿Estás seguro de eliminar a ${mascota.nombre}?`)) {
       this.mascotaService.eliminar(mascota.id);
     }

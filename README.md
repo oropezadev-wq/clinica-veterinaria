@@ -12,7 +12,7 @@ Proyecto del curso **Desarrollo de Interfaces 3** (IDAT). Los datos se guardan e
 
 | Integrante | Parte del proyecto |
 |---|---|
-| Wali Oropeza Ávila | Estructura del proyecto, menú, inicio, modelos y servicios, carpeta `shared` (pipes, directiva, componentes), módulo Dueños, README |
+| Wali Jhonatan Oropeza Ávila | Estructura del proyecto, menú, inicio, modelos y servicios, carpeta `shared` (pipes, directiva, componentes), módulo Dueños, README |
 | Rosmery Espinoza | Módulo Mascotas, documento de análisis y diseño (necesidades, problemas, flujos) |
 | Abraham Lopez Marmanillo | Módulo Citas (formulario y agenda) y módulo Historial, bocetos de pantallas |
 
@@ -50,7 +50,7 @@ Abrir <http://localhost:4200>.
 npm test -- --watch=false
 ```
 
-Prueban los pipes (fechas, edad, estado de cita), los servicios (registrar, eliminar, horario ocupado) y la herencia de `Persona`.
+Prueban los pipes (fechas, edad, estado de cita, etiqueta de mascota), los servicios (registrar, eliminar, horario ocupado), los validadores propios, los formularios de cita y atención, los botones de la agenda, el flujo completo de atención y la herencia de `Persona`.
 
 <!-- Pegar aquí la captura del resultado de las pruebas -->
 
@@ -62,6 +62,7 @@ src/app/
 │   ├── models/persona.ts        Clase abstracta Persona
 │   ├── services/repositorio-memoria.ts   Clase base genérica (arreglo en memoria)
 │   ├── pipes/                   fechaTexto, edad
+│   ├── validators/              sinEspacios, fechaNoFutura, fechaNoPasada
 │   ├── directives/              appResaltarFecha (resalta lo de hoy)
 │   ├── components/              menú y encabezado de página
 │   └── utils/fechas.ts          funciones para fechas "AAAA-MM-DD"

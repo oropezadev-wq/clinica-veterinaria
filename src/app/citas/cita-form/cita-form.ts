@@ -4,12 +4,14 @@ import { CommonModule } from '@angular/common';
 import { DatosCita } from '../cita.model';
 import { Mascota } from '../../mascotas/mascota.model';
 import { CitaService } from '../cita.service';
-import { hoyTexto } from '../../shared/utils/fechas';
+import { EtiquetaMascotaPipe } from '../../mascotas/etiqueta-mascota.pipe';
+import { horaActual, hoyTexto } from '../../shared/utils/fechas';
+import { fechaNoPasada, sinEspacios } from '../../shared/validators/validadores';
 
 @Component({
   selector: 'app-cita-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, EtiquetaMascotaPipe],
   templateUrl: './cita-form.html',
 })
 export class CitaForm {
@@ -25,14 +27,22 @@ export class CitaForm {
 
   formulario = this.fb.nonNullable.group({
     mascotaId: [0, [Validators.required, Validators.min(1)]],
-    fecha: [hoyTexto(), Validators.required],
+    fecha: [hoyTexto(), [Validators.required, fechaNoPasada]],
     hora: ['', Validators.required],
-    motivo: ['', [Validators.required, Validators.minLength(3)]],
+    motivo: ['', [Validators.required, Validators.minLength(3), sinEspacios]],
+    costo: [0, [Validators.required, Validators.min(1), Validators.max(1000)]],
   });
 
   get horasLibres(): string[] {
     const fechaSeleccionada = this.formulario.controls.fecha.value;
-    return this.citaService.horasDisponibles(fechaSeleccionada);
+    const libres = this.citaService.horasDisponibles(fechaSeleccionada);
+    // Si la cita es para hoy, solo se ofrecen las horas que todavía no pasaron
+    return fechaSeleccionada === hoyTexto() ? libres.filter((h) => h > horaActual()) : libres;
+  }
+
+  /** Al cambiar de fecha, la hora elegida puede ya no estar libre. */
+  limpiarHora(): void {
+    this.formulario.controls.hora.setValue('');
   }
 
   campoInvalido(campo: keyof DatosCita): boolean {
@@ -51,6 +61,7 @@ export class CitaForm {
       fecha: hoyTexto(),
       hora: '',
       motivo: '',
+      costo: 0,
     });
   }
 }

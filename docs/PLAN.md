@@ -13,11 +13,11 @@ Qué se muestra: el documento de las partes 1 y 2, y la aplicación corriendo co
 | Pipes `fechaTexto`, `edad`, `estadoCita` y directiva `appResaltarFecha` | Wali | 23/10 | Hecho |
 | Página de inicio y módulo Dueños completo (formulario de ejemplo) | Wali | 23/10 | Hecho |
 | Pruebas básicas y README | Wali | 23/10 | Hecho |
-| Documento parte 1: usuarios, necesidades, problemas y cómo los resuelve la app | Rosmery | 26/10 | Pendiente |
-| Documento parte 2: bocetos de pantallas (Paint o similar) | Abraham | 26/10 | Pendiente |
-| Documento parte 2: flujos de usuario (registrar mascota, agendar cita, ver historial) | Rosmery | 26/10 | Pendiente |
-| Revisar y unir el documento en Word/PDF | Wali | 27/10 | Pendiente |
-| Repositorio en GitHub con los 3 invitados y el docente con acceso | Wali | 27/10 | Pendiente |
+| Documento parte 1: usuarios, necesidades, problemas y cómo los resuelve la app | Rosmery | 26/10 | Hecho |
+| Documento parte 2: bocetos de pantallas (Paint o similar) | Abraham | 26/10 | Hecho |
+| Documento parte 2: flujos de usuario (registrar mascota, agendar cita, ver historial) | Rosmery | 26/10 | Hecho |
+| Revisar y unir el documento en Word/PDF | Wali | 27/10 | Hecho |
+| Repositorio en GitHub con los 3 invitados y el docente con acceso | Wali | 27/10 | Hecho |
 
 ## Etapa 2 — Entrega final (fecha por confirmar)
 
@@ -32,7 +32,7 @@ Qué se muestra: el documento de las partes 1 y 2, y la aplicación corriendo co
 | Capturas en el README y de las pruebas | Wali | `README.md` |
 | Preparar la sustentación (cada uno explica su parte) | Todos | — |
 
-Cada archivo pendiente ya existe y tiene los pasos escritos en un comentario `TAREA DE ...`. El modelo a copiar es el módulo Dueños (`src/app/duenos/`).
+El módulo Dueños (`src/app/duenos/`) es el modelo que siguen los demás módulos.
 
 ## Cómo trabajar
 

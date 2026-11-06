@@ -62,6 +62,7 @@ src/app/
 │   ├── models/persona.ts        Clase abstracta Persona
 │   ├── services/repositorio-memoria.ts   Clase base genérica (arreglo en memoria)
 │   ├── pipes/                   fechaTexto, edad
+│   ├── validators/              sinEspacios, fechaNoFutura, fechaNoPasada
 │   ├── directives/              appResaltarFecha (resalta lo de hoy)
 │   ├── components/              menú y encabezado de página
 │   └── utils/fechas.ts          funciones para fechas "AAAA-MM-DD"

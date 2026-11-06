@@ -1,4 +1,5 @@
 import { Component, inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { EncabezadoPagina } from '../../shared/components/encabezado-pagina/encabezado-pagina';
 import { Agenda } from '../agenda/agenda';
 import { CitaForm } from '../cita-form/cita-form';
@@ -25,7 +26,8 @@ import { Mascota } from '../../mascotas/mascota.model';
         <app-agenda 
           [citas]="citas" 
           [nombreMascota]="nombreMascota" 
-          (cambiarEstado)="cambiarEstado($event)" />
+          (cambiarEstado)="cambiarEstado($event)"
+          (atender)="irAHistorial($event)" />
       </div>
     </div>
   `,
@@ -33,6 +35,7 @@ import { Mascota } from '../../mascotas/mascota.model';
 export class CitasPagina {
   private citaService = inject(CitaService);
   private mascotaService = inject(MascotaService);
+  private router = inject(Router);
 
   // Obtener todas las citas registradas
   get citas(): Cita[] {
@@ -60,7 +63,12 @@ export class CitasPagina {
     return mascota ? mascota.nombre : 'Desconocida';
   };
 
-  // Cambiar el estado de una cita (Atendida / Cancelada)
+  // La atención se registra en el historial de la mascota; ahí la cita pasa a Atendida
+  irAHistorial(cita: Cita): void {
+    this.router.navigate(['/historial', cita.mascotaId]);
+  }
+
+  // Cambiar el estado de una cita (Cancelada)
   cambiarEstado(evento: { id: number; estado: EstadoCita }): void {
     this.citaService.cambiarEstado(evento.id, evento.estado);
   }

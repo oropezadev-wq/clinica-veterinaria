@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DatosDueno } from '../dueno.model';
+import { SOLO_LETRAS, sinEspacios } from '../../shared/validators/validadores';
 
 /**
  * EJEMPLO RESUELTO de formulario reactivo (ReactiveForms).
@@ -23,12 +24,12 @@ export class DuenoForm {
 
   constructor(private fb: FormBuilder) {
     this.formulario = this.fb.nonNullable.group({
-      nombres: ['', [Validators.required, Validators.minLength(2)]],
-      apellidos: ['', [Validators.required, Validators.minLength(2)]],
+      nombres: ['', [Validators.required, Validators.minLength(2), Validators.pattern(SOLO_LETRAS), sinEspacios]],
+      apellidos: ['', [Validators.required, Validators.minLength(2), Validators.pattern(SOLO_LETRAS), sinEspacios]],
       dni: ['', [Validators.required, Validators.pattern('^[0-9]{8}$')]],
       telefono: ['', [Validators.required, Validators.pattern('^9[0-9]{8}$')]],
       email: ['', [Validators.required, Validators.email]],
-      direccion: ['', Validators.required],
+      direccion: ['', [Validators.required, sinEspacios]],
     });
   }
 

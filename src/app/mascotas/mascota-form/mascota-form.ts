@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ESPECIES, DatosMascota } from '../mascota.model';
+import { fechaNoFutura, sinEspacios } from '../../shared/validators/validadores';
 import { Dueno } from '../../duenos/dueno.model';
 
 @Component({
@@ -20,12 +21,12 @@ export class MascotaForm {
 
   constructor(private fb: FormBuilder) {
     this.formulario = this.fb.nonNullable.group({
-      nombre: ['', [Validators.required, Validators.minLength(2)]],
+      nombre: ['', [Validators.required, Validators.minLength(2), sinEspacios]],
       especie: ['', Validators.required],
-      raza: ['', Validators.required],
+      raza: ['', [Validators.required, sinEspacios]],
       sexo: ['', Validators.required],
-      fechaNacimiento: ['', Validators.required],
-      pesoKg: [0, [Validators.required, Validators.min(0.1)]],
+      fechaNacimiento: ['', [Validators.required, fechaNoFutura]],
+      pesoKg: [0, [Validators.required, Validators.min(0.1), Validators.max(150)]],
       duenoId: [0, [Validators.required, Validators.min(1)]],
     });
   }

@@ -6,6 +6,9 @@ import { AtencionForm } from '../atencion-form/atencion-form';
 import { AtencionService } from '../atencion.service';
 import { VeterinarioService } from '../veterinario.service';
 import { MascotaService } from '../../mascotas/mascota.service';
+import { EtiquetaMascotaPipe } from '../../mascotas/etiqueta-mascota.pipe';
+import { Cita } from '../../citas/cita.model';
+import { CitaService } from '../../citas/cita.service';
 import { Mascota } from '../../mascotas/mascota.model';
 import { Atencion, DatosAtencion } from '../atencion.model';
 import { Veterinario } from '../veterinario.model';
@@ -14,7 +17,7 @@ import { FechaTextoPipe } from '../../shared/pipes/fecha-texto.pipe';
 @Component({
   selector: 'app-historial-pagina',
   standalone: true,
-  imports: [CommonModule, EncabezadoPagina, AtencionForm, FechaTextoPipe],
+  imports: [CommonModule, EncabezadoPagina, AtencionForm, FechaTextoPipe, EtiquetaMascotaPipe],
   template: `
     <app-encabezado-pagina titulo="Historial" subtitulo="Atenciones de cada mascota" icono="📋" />
     
@@ -22,10 +25,10 @@ import { FechaTextoPipe } from '../../shared/pipes/fecha-texto.pipe';
     <div class="row mb-4">
       <div class="col-md-6">
         <label class="form-label fw-bold">Seleccionar Mascota:</label>
-        <select class="form-select" [value]="mascotaId" (change)="onSeleccionarMascota($event)">
-          <option value="0" disabled>-- Elija una mascota --</option>
+        <select class="form-select" (change)="onSeleccionarMascota($event)">
+          <option value="0" disabled [selected]="mascotaId === 0">-- Elija una mascota --</option>
           @for (m of mascotas; track m.id) {
-            <option [value]="m.id">{{ m.nombre }} ({{ m.especie }})</option>
+            <option [value]="m.id" [selected]="m.id === mascotaId">{{ m | etiquetaMascota }}</option>
           }
         </select>
       </div>
@@ -54,6 +57,7 @@ import { FechaTextoPipe } from '../../shared/pipes/fecha-texto.pipe';
                 </h2>
                 <div [id]="'collapse' + i" class="accordion-collapse collapse" [aria-labelledby]="'heading' + i" data-bs-parent="#accordionAtenciones">
                   <div class="accordion-body">
+                    <p><strong>Motivo:</strong> {{ atencion.motivo }}</p>
                     <p><strong>Diagnóstico:</strong> {{ atencion.diagnostico }}</p>
                     <p class="mb-0"><strong>Tratamiento:</strong> {{ atencion.tratamiento }}</p>
                   </div>
@@ -69,6 +73,7 @@ import { FechaTextoPipe } from '../../shared/pipes/fecha-texto.pipe';
         <div class="col-lg-4">
           <app-atencion-form 
             [mascotaId]="mascotaId" 
+            [citas]="citasParaAtender" 
             [veterinarios]="veterinarios" 
             (guardado)="registrar($event)" />
         </div>
@@ -83,6 +88,7 @@ export class HistorialPagina implements OnInit {
   private router: Router = inject(Router);
   private mascotaService: MascotaService = inject(MascotaService);
   private atencionService: AtencionService = inject(AtencionService);
+  private citaService: CitaService = inject(CitaService);
   private veterinarioService: VeterinarioService = inject(VeterinarioService);
 
   mascotaId: number = 0;
@@ -105,6 +111,10 @@ export class HistorialPagina implements OnInit {
     return this.atencionService.historialDe(this.mascotaId);
   }
 
+  get citasParaAtender(): Cita[] {
+    return this.citaService.paraAtender(this.mascotaId);
+  }
+
   get veterinarios(): Veterinario[] {
     return this.veterinarioService.listar();
   }
@@ -116,11 +126,12 @@ export class HistorialPagina implements OnInit {
 
   nombreVeterinario(id: number): string {
     const vet = this.veterinarioService.buscarPorId(id);
-    return vet ? vet.nombres : 'Desconocido';
+    return vet ? vet.nombreCompleto : 'Desconocido';
   }
 
   registrar(datos: DatosAtencion): void {
     this.atencionService.registrar(datos);
+    this.citaService.cambiarEstado(datos.citaId, 'atendida');
     alert('¡Atención médica registrada con éxito!');
   }
 }

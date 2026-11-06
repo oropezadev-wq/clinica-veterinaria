@@ -54,7 +54,7 @@
         <label class="form-label">Fecha de Nacimiento</label>
         <input type="date" class="form-control" formControlName="fechaNacimiento">
         @if (campoInvalido('fechaNacimiento')) {
-          <div class="text-danger small mt-1">La fecha de nacimiento es obligatoria.</div>
+          <div class="text-danger small mt-1">La fecha de nacimiento es obligatoria y no puede ser futura.</div>
         }
       </div>
 
@@ -63,7 +63,7 @@
         <label class="form-label">Peso (Kg)</label>
         <input type="number" step="0.1" class="form-control" formControlName="pesoKg" placeholder="0.0">
         @if (campoInvalido('pesoKg')) {
-          <div class="text-danger small mt-1">Ingrese un peso válido mayor a 0.1 kg.</div>
+          <div class="text-danger small mt-1">Ingrese un peso entre 0.1 y 150 kg.</div>
         }
       </div>
 
@@ -73,7 +73,7 @@
         <select class="form-select" formControlName="duenoId">
           <option [ngValue]="0">Seleccione un dueño...</option>
           @for (dueno of duenos; track dueno.id) {
-            <option [ngValue]="dueno.id">{{ dueno.nombres }} {{ dueno.apellidos }}</option>
+            <option [ngValue]="dueno.id">{{ dueno.dni }} - {{ dueno.nombreCompleto }}</option>
           }
         </select>
         @if (campoInvalido('duenoId')) {

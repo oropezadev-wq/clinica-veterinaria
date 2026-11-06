@@ -10,6 +10,7 @@ export class AtencionService extends RepositorioMemoria<Atencion> {
     return [
       {
         id: 1,
+        citaId: 7,
         mascotaId: 1,
         veterinarioId: 1,
         fecha: sumarDias(hoy, -120),
@@ -19,6 +20,7 @@ export class AtencionService extends RepositorioMemoria<Atencion> {
       },
       {
         id: 2,
+        citaId: 1,
         mascotaId: 1,
         veterinarioId: 1,
         fecha: sumarDias(hoy, -7),
@@ -28,6 +30,7 @@ export class AtencionService extends RepositorioMemoria<Atencion> {
       },
       {
         id: 3,
+        citaId: 8,
         mascotaId: 3,
         veterinarioId: 2,
         fecha: sumarDias(hoy, -60),

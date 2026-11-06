@@ -12,9 +12,9 @@ Proyecto del curso **Desarrollo de Interfaces 3** (IDAT). Los datos se guardan e
 
 | Integrante | Parte del proyecto |
 |---|---|
-| Wali Jhonatan Oropeza Ávila | Estructura del proyecto, menú, inicio, modelos y servicios, carpeta `shared` (pipes, directiva, componentes), módulo Dueños, README |
-| Rosmery Espinoza | Módulo Mascotas, documento de análisis y diseño (necesidades, problemas, flujos) |
-| Abraham Lopez Marmanillo | Módulo Citas (formulario y agenda) y módulo Historial, bocetos de pantallas |
+| Wali Jhonatan Oropeza Ávila | Estructura del proyecto, menú, inicio, modelos y servicios, carpeta `shared` (pipes, directiva, componentes, validadores), módulo Dueños, atención ligada a la cita, pruebas, README |
+| Rosmery Espinoza Quito | Módulo Mascotas, documento de análisis y diseño (necesidades, problemas, flujos) |
+| Abraham Sebastiam Lopez Marmanillo | Módulo Citas (formulario y agenda) y módulo Historial, bocetos de pantallas |
 
 ## Tecnologías
 
@@ -25,6 +25,22 @@ Proyecto del curso **Desarrollo de Interfaces 3** (IDAT). Los datos se guardan e
 | TypeScript | 5.9 |
 | Bootstrap | 5.3 |
 | Vitest (pruebas) | 4 |
+
+## Dependencias
+
+Requisitos del entorno: Node.js 20.19 o superior, npm y un navegador actual. No necesita base de datos ni servidor propio.
+
+| Paquete | Para qué se usa |
+|---|---|
+| `@angular/core`, `common`, `router`, `platform-browser`, `compiler` | Base de la aplicación, componentes y rutas |
+| `@angular/forms` | Formularios reactivos y validaciones |
+| `bootstrap` | Estilos y componentes (navbar, cards, modal, acordeón) |
+| `rxjs`, `tslib` | Librerías que Angular necesita para funcionar |
+| `@angular/cli`, `@angular/build`, `@angular/compiler-cli`, `typescript` | Compilar y ejecutar el proyecto (desarrollo) |
+| `vitest`, `jsdom` | Pruebas (desarrollo) |
+| `prettier` | Formato del código (desarrollo) |
+
+Las versiones exactas quedan fijadas en `package-lock.json`.
 
 ## Instalación
 
@@ -50,16 +66,38 @@ Abrir <http://localhost:4200>.
 npm test -- --watch=false
 ```
 
-Prueban los pipes (fechas, edad, estado de cita, etiqueta de mascota), los servicios (registrar, eliminar, horario ocupado), los validadores propios, los formularios de cita y atención, los botones de la agenda, el flujo completo de atención y la herencia de `Persona`.
+Para ver una línea por cada prueba:
 
-<!-- Pegar aquí la captura del resultado de las pruebas -->
+```bash
+npm test -- --watch=false --reporters=verbose
+```
+
+### Qué se prueba
+
+| Archivo | Pruebas | Qué comprueba |
+|---|---:|---|
+| `src/app/app.spec.ts` | 2 | La aplicación se crea y el menú tiene sus 5 opciones |
+| `src/app/servicios.spec.ts` | 5 | Registrar y eliminar, horario ocupado, herencia y polimorfismo de `Persona` |
+| `src/app/shared/pipes/pipes.spec.ts` | 7 | Pipes `fechaTexto`, `edad` y `estadoCita` |
+| `src/app/formularios.spec.ts` | 12 | Validadores propios, pipe `etiquetaMascota`, formularios de cita y atención, botones de la agenda |
+| `src/app/historial/flujo-atencion.spec.ts` | 1 | Flujo completo: al atender una cita, se suma al historial y pasa a Atendida |
+
+### Evidencia
+
+Resultado de la última ejecución: 5 archivos y 27 pruebas aprobadas.
+
+![Resultado de las pruebas](docs/capturas/pruebas.png)
+
+Validaciones en pantalla, con datos incorrectos en el formulario de dueño:
+
+![Mensajes de validación](docs/capturas/validaciones.png)
 
 ## Estructura del proyecto
 
 ```
 src/app/
 ├── shared/                  Lo que usan todos los módulos
-│   ├── models/persona.ts        Clase abstracta Persona
+│   ├── models/                  Interfaz Describible y clase abstracta Persona
 │   ├── services/repositorio-memoria.ts   Clase base genérica (arreglo en memoria)
 │   ├── pipes/                   fechaTexto, edad
 │   ├── validators/              sinEspacios, fechaNoFutura, fechaNoPasada
@@ -81,12 +119,35 @@ Cada módulo tiene su archivo `*.routes.ts` y se carga cuando el usuario entra a
 |---|---|
 | Tipos, interfaces y funciones tipadas | `*.model.ts` (interfaces `Mascota`, `Cita`, `Atencion`; tipos `Especie`, `EstadoCita`) |
 | POO: herencia, abstracción, polimorfismo, encapsulamiento | `Persona` (abstracta) → `Dueno` y `Veterinario`; `RepositorioMemoria<T>` → todos los servicios; `datos` es `protected` |
+| Implementación de interfaces | `Persona implements Describible`; los pipes implementan `PipeTransform` |
 | Arquitectura modular | Una carpeta por funcionalidad + `shared`, con rutas propias |
-| Componentes con `@Input` / `@Output` | `DuenoForm`, `DuenoLista`, `TarjetaMascota`, `EncabezadoPagina` |
-| Pipes y directivas personalizados | `fechaTexto`, `edad`, `estadoCita`, `appResaltarFecha` |
-| Bootstrap | Navbar adaptable, cards, tablas, alertas, modal de confirmación, formularios con validación |
-| ReactiveForms | `DuenoForm` (y los formularios de mascota, cita y atención) |
+| Componentes con `@Input` / `@Output` | `DuenoForm`, `DuenoLista`, `MascotaForm`, `TarjetaMascota`, `CitaForm`, `Agenda`, `AtencionForm`, `EncabezadoPagina` |
+| Pipes y directivas personalizados | `fechaTexto`, `edad`, `estadoCita`, `etiquetaMascota`, `appResaltarFecha` |
+| Bootstrap | Navbar adaptable, cards, tablas, alertas, modal de confirmación, acordeón del historial, formularios con validación |
+| ReactiveForms y validaciones | Formularios de dueño, mascota, cita y atención; validadores propios en `shared/validators` |
 
 ## Capturas
 
-<!-- Agregar capturas de cada pantalla al terminar -->
+**Inicio**
+
+![Inicio](docs/capturas/inicio.png)
+
+**Dueños**
+
+![Dueños](docs/capturas/duenos.png)
+
+**Mascotas**
+
+![Mascotas](docs/capturas/mascotas.png)
+
+**Citas**
+
+![Citas](docs/capturas/citas.png)
+
+**Historial:** la fecha y el motivo se cargan desde la cita elegida.
+
+![Historial](docs/capturas/historial.png)
+
+**Citas en celular**
+
+![Citas en celular](docs/capturas/citas-celular.png)

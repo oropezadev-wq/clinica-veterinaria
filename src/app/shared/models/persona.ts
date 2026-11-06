@@ -1,8 +1,10 @@
+import { Describible } from './describible';
+
 /**
  * Clase abstracta: no se puede crear una "Persona" directamente,
  * solo sus hijas (Dueno y Veterinario). Así reutilizamos los datos comunes.
  */
-export abstract class Persona {
+export abstract class Persona implements Describible {
   constructor(
     public readonly id: number,
     public nombres: string,

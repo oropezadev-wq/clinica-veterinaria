@@ -117,7 +117,7 @@ Cada módulo tiene su archivo `*.routes.ts` y se carga cuando el usuario entra a
 
 | Criterio | Dónde está |
 |---|---|
-| Tipos, interfaces y funciones tipadas | `*.model.ts` (interfaces `Mascota`, `Cita`, `Atencion`; tipos `Especie`, `EstadoCita`) |
+| Tipos, interfaces y funciones tipadas | `*.model.ts` (interfaces `Mascota`, `Cita`, `Atencion`; tipos `Sexo`, `EstadoCita`) |
 | POO: herencia, abstracción, polimorfismo, encapsulamiento | `Persona` (abstracta) → `Dueno` y `Veterinario`; `RepositorioMemoria<T>` → todos los servicios; `datos` es `protected` |
 | Implementación de interfaces | `Persona implements Describible`; los pipes implementan `PipeTransform` |
 | Arquitectura modular | Una carpeta por funcionalidad + `shared`, con rutas propias |

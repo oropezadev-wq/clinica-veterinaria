@@ -1,13 +1,12 @@
 /** Tipos con valores fijos: TypeScript avisa si se escribe otro valor. */
-export type Especie = 'Perro' | 'Gato' | 'Ave' | 'Conejo' | 'Otro';
 export type Sexo = 'Macho' | 'Hembra';
 
-export const ESPECIES: Especie[] = ['Perro', 'Gato', 'Ave', 'Conejo', 'Otro'];
+export const ESPECIES: string[] = ['Perro', 'Gato', 'Otro'];
 
 export interface Mascota {
   id: number;
   nombre: string;
-  especie: Especie;
+  especie: string; // Perro, Gato o la que se escriba en "Otro"
   raza: string;
   sexo: Sexo;
   fechaNacimiento: string; // "AAAA-MM-DD"

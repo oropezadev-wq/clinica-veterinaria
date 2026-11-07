@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { EdadPipe } from '../../shared/pipes/edad.pipe';
-import { Especie, Mascota } from '../mascota.model';
+import { Mascota } from '../mascota.model';
 
 /**
  * Componente reutilizable: tarjeta con los datos de una mascota.
@@ -26,15 +26,13 @@ export class TarjetaMascota {
   @Output() verHistorial = new EventEmitter<Mascota>();
   @Output() eliminar = new EventEmitter<Mascota>();
 
-  private iconos: Record<Especie, string> = {
+  private iconos: Record<string, string> = {
     Perro: '🐶',
     Gato: '🐱',
-    Ave: '🐦',
-    Conejo: '🐰',
-    Otro: '🐾',
   };
 
   get icono(): string {
-    return this.iconos[this.mascota.especie];
+    // Una especie escrita en "Otro" usa la huella
+    return this.iconos[this.mascota.especie] ?? '🐾';
   }
 }

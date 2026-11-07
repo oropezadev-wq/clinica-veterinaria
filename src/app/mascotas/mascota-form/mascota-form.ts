@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { ESPECIES, DatosMascota } from '../mascota.model';
+import { ESPECIES, DatosMascota, Sexo } from '../mascota.model';
 import { fechaNoFutura, sinEspacios } from '../../shared/validators/validadores';
 import { Dueno } from '../../duenos/dueno.model';
 
@@ -23,6 +23,7 @@ export class MascotaForm {
     this.formulario = this.fb.nonNullable.group({
       nombre: ['', [Validators.required, Validators.minLength(2), sinEspacios]],
       especie: ['', Validators.required],
+      otraEspecie: [''],
       raza: ['', [Validators.required, sinEspacios]],
       sexo: ['', Validators.required],
       fechaNacimiento: ['', [Validators.required, fechaNoFutura]],
@@ -31,7 +32,23 @@ export class MascotaForm {
     });
   }
 
-  campoInvalido(campo: keyof DatosMascota): boolean {
+  get esOtro(): boolean {
+    return this.formulario.controls.especie.value === 'Otro';
+  }
+
+  /** La especie escrita a mano solo es obligatoria cuando se elige "Otro". */
+  cambioEspecie(): void {
+    const otra = this.formulario.controls.otraEspecie;
+    if (this.esOtro) {
+      otra.setValidators([Validators.required, sinEspacios]);
+    } else {
+      otra.clearValidators();
+      otra.setValue('');
+    }
+    otra.updateValueAndValidity();
+  }
+
+  campoInvalido(campo: keyof DatosMascota | 'otraEspecie'): boolean {
     const control = this.formulario.controls[campo];
     return !!(control && control.invalid && (control.dirty || control.touched));
   }
@@ -41,7 +58,17 @@ export class MascotaForm {
       this.formulario.markAllAsTouched();
       return;
     }
-    this.guardado.emit(this.formulario.getRawValue() as DatosMascota);
+    const datos = this.formulario.getRawValue();
+    this.guardado.emit({
+      nombre: datos.nombre,
+      especie: this.esOtro ? datos.otraEspecie.trim() : datos.especie,
+      raza: datos.raza,
+      sexo: datos.sexo as Sexo,
+      fechaNacimiento: datos.fechaNacimiento,
+      pesoKg: datos.pesoKg,
+      duenoId: datos.duenoId,
+    });
     this.formulario.reset();
+    this.cambioEspecie();
   }
 }

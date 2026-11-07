@@ -16,7 +16,7 @@
       <!-- Especie -->
       <div class="mb-3">
         <label class="form-label">Especie</label>
-        <select class="form-select" formControlName="especie">
+        <select class="form-select" formControlName="especie" (change)="cambioEspecie()">
           <option value="">Seleccione una especie...</option>
           @for (esp of especiesList; track esp) {
             <option [value]="esp">{{ esp }}</option>
@@ -26,6 +26,17 @@
           <div class="text-danger small mt-1">Debe seleccionar una especie.</div>
         }
       </div>
+
+      <!-- Solo aparece si se elige "Otro" -->
+      @if (esOtro) {
+        <div class="mb-3">
+          <label class="form-label">Especifique la especie</label>
+          <input type="text" class="form-control" formControlName="otraEspecie" placeholder="Ej. Loro, Hámster...">
+          @if (campoInvalido('otraEspecie')) {
+            <div class="text-danger small mt-1">Debe especificar la especie.</div>
+          }
+        </div>
+      }
 
       <!-- Raza -->
       <div class="mb-3">
